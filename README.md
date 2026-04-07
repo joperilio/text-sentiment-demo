@@ -20,13 +20,24 @@ first training) ├─ app.py # FastAPI server └─ templates/
 1. **Build the Docker image**
 
 ```bash
-docker build -t sentiment-demo .
+docker build -t python3-dev .
 
 2. Run the container
-docker run -d -p 8000:8000 sentiment-demo
+#d ocker run -d -p 8000:8000 python3-dev
+docker run -d -v $(pwd):/app -p 8000:8000 --name python3-dev python3-dev     uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+
+you can run as well, docker run -d --name python3-dev   -v $(pwd):/app -w /app   -p 8000:8000   python3-dev tail -f /dev/null
+ -- >to map to you local code base with this -v $(pwd):/app - it means local changes will be loaded on restart of the container (docker restart python.dev).
+With this, the container is staying running as daemon and not terminating immediately. you might want 
+
+Pay attention that python3 packages must importes as in requirments.txt, we use a full paython image whcih contains already the packages, or use pip to install them
+
+Starting FastAPI im Container: uvicorn app:app --host 0.0.0.0 --port 8000 (it will be started by Dockerfile, but might be usefull)
+
+Creating the model in the cnotainer, from outside with:  sudo docker exec -it python3-dev python3 create_sentiment_model.py 
 
 3. Open your browser and visit:
-http://YOUR_VPS_IP:8000
+http://YOUR_VPS_IP_or_Any_Remote_IP_Where_Container_Runs:8000
 
 
 4. Enter text in the form and get instant sentiment predictions.
@@ -53,3 +64,5 @@ optimization
 Creating a live demo for learning or presentation
 
 
+Testing samples:
+curl -X POST http://127.0.0.1:8000/predict -H "Content-Type: application/json" -d '{"text":"I love this project!"}'
