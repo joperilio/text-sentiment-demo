@@ -1,0 +1,21 @@
+# Use Python 3.11 slim as base
+FROM python:3.11-slim
+
+# Set working directory inside container
+WORKDIR /app
+
+# Copy requirements if you have them
+COPY requirements.txt .
+
+# Upgrade pip and install dependencies
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+# Copy all project files (optional, you can mount volume instead)
+COPY . .
+
+# Create model folder
+RUN mkdir -p /app/model
+
+# Start an interactive shell so the container stays alive
+CMD ["/bin/bash"]

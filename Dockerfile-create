@@ -1,0 +1,21 @@
+# Use Python 3.11 slim image
+FROM python:3.11-slim
+
+# Set working directory inside container
+WORKDIR /app
+
+# Copy dependencies first (for caching)
+COPY requirements.txt .
+
+# Install pip dependencies
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+# Copy all project files
+COPY . .
+
+# Ensure model directory exists
+RUN mkdir -p model
+
+# Default command: run the model creation script
+CMD ["python3", "create_sentiment_model.py"]

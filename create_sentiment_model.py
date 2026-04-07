@@ -8,6 +8,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
 from tensorflow.keras.models import load_model
 
+
 # -------------------------------
 # 1️⃣ Trainingsdaten (kleines Demo-Set)
 texts = ["I love this!", "This is bad", "Amazing work", "I hate it", "Not good"]
@@ -36,7 +37,7 @@ model.fit(X, y, epochs=10, verbose=0)
 
 # -------------------------------
 # 5️⃣ Modell speichern als sentiment_model.h5
-model.save("sentiment_model.h5")
+model.save("model/sentiment_model.h5")
 print("✅ Model saved as sentiment_model.h5")
 
 # -------------------------------
@@ -45,8 +46,17 @@ test_texts = ["I like this project", "This is terrible"]
 test_seq = tokenizer.texts_to_sequences(test_texts)
 test_X = pad_sequences(test_seq, maxlen=5)
 
-loaded_model = load_model("sentiment_model.h5")
+loaded_model = load_model("model/sentiment_model.h5")
 predictions = loaded_model.predict(test_X)
 
 for txt, pred in zip(test_texts, predictions):
     print(f"{txt} → {'Positive' if pred[0]>0.5 else 'Negative'}")
+
+
+import pickle
+
+# Save the tokenizer
+with open('model/tokenizer.pickle', 'wb') as handle:
+    pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+print("✅ Tokenizer saved as tokenizer.pickle")
