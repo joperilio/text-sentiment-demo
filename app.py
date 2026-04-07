@@ -19,6 +19,7 @@ class TextData(BaseModel):
 def home():
     return {"message": "Welcome to the Text Sentiment Analysis API!"}
 
+@app.post("/predict")
 @app.post("/predict/")
 def predict_sentiment(data: TextData):
     text = data.text
